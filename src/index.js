@@ -1,6 +1,8 @@
 import express from 'express';
 import morgan from 'morgan';
 import SocketIO from 'socket.io';
+import Game from './Game';
+import Player from './Player';
 
 const app = express();
 
@@ -16,11 +18,36 @@ const server = app.listen(process.env.PORT || 3000, () => {
 });
 
 const io = SocketIO(server);
+server.game = {};
 
-io.on('connection', function(socket){
-  console.log('a user connected');
-
-  socket.on('disconnect', function(){
-    console.log('user disconnected');
+const onConnection = (socket) => {
+  socket.player = new Player(socket.id);
+  socket.on('create', (data) => {
+    const { id } = data;
+    const game = server.game[id];
+    if (!game) {
+      socket.join(id);
+      socket.game = new Game(socket.player, socket);
+      server.game[id] = socket.game;
+    }
   });
-});
+
+  socket.on('join', (data) => {
+    const { id } = data;
+    const game = server.game[id];
+    if (game) {
+      socket.join(id);
+      game.processInput('JOIN_GAME', socket.player);
+      socket.game = game;
+    }
+  });
+
+  socket.on('gaming', (data) => {
+    if (socket.game) {
+      const { cmd } = data;
+      socket.game.processInput(cmd, socket.player ,data);
+    }
+  });
+};
+
+io.on('connection', onConnection);

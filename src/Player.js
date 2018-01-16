@@ -1,6 +1,6 @@
 export default class Player {
-  constructor(name) {
-    this.name = name;
+  constructor(id) {
+    this.id = id;
     this.card = null;
     this.lost = false;
     this.isProtected = false;

@@ -33,7 +33,8 @@ export const commands = {
 }
 
 export default class Game {
-  constructor(creater) {
+  constructor(creater, socket) {
+    this.socket = socket;
     this.status = GAME_STATUS.INIT;
     this.players = [creater];
     this.deck = new Deck();
@@ -42,7 +43,7 @@ export default class Game {
   processInput(cmd, player, data) {
     const cmdObj = commands[cmd];
     if (cmdObj && cmdObj.status === this.status) {
-      this[cmdOjb.action](data);
+      this[cmdOjb.action](player, data);
     }
   }
 
@@ -86,8 +87,8 @@ export default class Game {
       return;
     }
 
-    const card = this.deck.deal();
     // deal card to next user
+    // this.deck.deal();
   }
 
   restart(player) {
