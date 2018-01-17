@@ -43,7 +43,7 @@ export default class Game {
   processInput(cmd, player, data) {
     const cmdObj = commands[cmd];
     if (cmdObj && cmdObj.status === this.status) {
-      this[cmdOjb.action](player, data);
+      this[cmdObj.action](player, data);
     }
   }
 

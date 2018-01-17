@@ -3,6 +3,7 @@ import morgan from 'morgan';
 import SocketIO from 'socket.io';
 import Game from './Game';
 import Player from './Player';
+import { random4Digit } from './utils/random';
 
 const app = express();
 
@@ -22,8 +23,9 @@ server.game = {};
 
 const onConnection = (socket) => {
   socket.player = new Player(socket.id);
-  socket.on('create', (data) => {
-    const { id } = data;
+  socket.on('create', () => {
+    if (socket.game) return;
+    const id = random4Digit();
     const game = server.game[id];
     if (!game) {
       socket.join(id);
@@ -33,6 +35,7 @@ const onConnection = (socket) => {
   });
 
   socket.on('join', (data) => {
+    if (socket.game) return;
     const { id } = data;
     const game = server.game[id];
     if (game) {
@@ -40,6 +43,7 @@ const onConnection = (socket) => {
       game.processInput('JOIN_GAME', socket.player);
       socket.game = game;
     }
+
   });
 
   socket.on('gaming', (data) => {
