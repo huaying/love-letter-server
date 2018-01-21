@@ -36,6 +36,7 @@ export default class Game {
 
   getStats = () => {
     return {
+      id: this.id,
       status: this.status,
       players: this.players.map(player => player.data()),
       cardNum: this.deck.cards.length,
