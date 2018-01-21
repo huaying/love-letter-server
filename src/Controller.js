@@ -33,6 +33,13 @@ export default class Controller {
       socket.game = new Game(socket.player, socket);
       server.game[id] = socket.game;
       socket.emit('gameCreated', { gameData: { gameId: id } });
+      socket.emit('playersChange', [
+          {
+            id: 5,
+            name: 'Burfie',
+          },
+        ]
+      );
     }
   }
 
@@ -47,6 +54,16 @@ export default class Controller {
       socket.join(id);
       game.processInput('JOIN_GAME', socket.player);
       socket.game = game;
+      socket.emit('playersChange', { players: [
+        {
+          id: 5,
+          name: 'Burfie',
+        },
+        {
+          id: 3,
+          name: 'Lard',
+        }
+      ] });
     }
   }
 }
