@@ -30,22 +30,20 @@ export default class Game {
   constructor(id, creater) {
     this.id = id;
     this.status = GAME_STATUS.INIT;
-    this.currentPlayer = null;
+    this.currentPlayer = 0;
     this.currentCard = null;
     this.players = [creater];
     this.deck = new Deck();
   }
 
-  getStats = () => {
-    return {
+  getStats = () => ({
       id: this.id,
       status: this.status,
-      currentPlayerId: this.currentPlayer.id,
-      currentCardId: this.currentCard.id,
+      currentPlayerId: this.currentPlayer ? this.currentPlayer.id : null,
+      currentCardId: this.currentCard ? this.currentCard.id : null,
       players: this.players.map(player => player.getData()),
       cardNum: this.deck.cards.length,
-    }
-  }
+  })
 
   process(cmd, player, data) {
     if (CMD_STATUS[cmd].status === this.status) {
@@ -76,7 +74,7 @@ export default class Game {
     this.players.forEach(player => {
       player.card = this.deck.deal();
     });
-
+    this.currentCard = this.deck.deal();
     return this.getStats();
   }
 
