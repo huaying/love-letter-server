@@ -7,6 +7,8 @@ export default class Player {
     this.isReady = false;
   }
 
+  static getPlayer = () => {}
+
   setLost() {
     this.lost = true;
   }
