@@ -1,3 +1,4 @@
+import { io } from './index';
 import Game from './Game';
 import Player from './Player';
 import { random4Digit } from './utils/random';
@@ -32,7 +33,7 @@ export default class Controller {
       socket.join(id);
       socket.game = new Game(socket.player, socket);
       server.game[id] = socket.game;
-      socket.emit('gameCreated', { gameData: { gameId: id } });
+      socket.emit('gameCreated', { id });
       socket.emit('playersChange', [
           {
             id: 5,
@@ -54,7 +55,7 @@ export default class Controller {
       socket.join(id);
       game.processInput('JOIN_GAME', socket.player);
       socket.game = game;
-      socket.emit('playersChange', { players: [
+      io.to(id).emit('playersChange', [
         {
           id: 5,
           name: 'Burfie',
@@ -63,7 +64,8 @@ export default class Controller {
           id: 3,
           name: 'Lard',
         }
-      ] });
+      ]);
+      io.to(id).emit('gameChange', { id });
     }
   }
 }

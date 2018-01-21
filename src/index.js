@@ -16,7 +16,7 @@ const server = app.listen(process.env.PORT || 3000, () => {
 	console.log(`Started on port ${server.address().port}`);
 });
 
-const io = SocketIO(server);
+export const io = SocketIO(server);
 server.game = {};
 
 const onConnection = (socket) => {
