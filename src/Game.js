@@ -52,7 +52,7 @@ export default class Game {
 
   join(player) {
     this.players.push(player);
-    return this.players.map(player => player.data());
+    return this.getStats();
   }
 
   ready(selectedPlayer) {
@@ -61,7 +61,7 @@ export default class Game {
         player.isReady = true;
       }
     })
-    return this.players.map(player => player.data());
+    return this.getStats();
   }
 
   start() {
@@ -69,10 +69,11 @@ export default class Game {
     this.deck.setup();
 
     // deal cards
-    return this.players.map(player => {
+    this.players.forEach(player => {
       player.card = this.deck.deal();
-      return player.data();
     });
+
+    return this.getStats();
   }
 
   /**
