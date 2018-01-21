@@ -5,59 +5,62 @@ export const GAME_STATUS = {
   OVER: 'OVER',
 };
 
-export const commands = {
-  JOIN_GAME: {
+export const CMD_STATUS = {
+  join: {
     status: GAME_STATUS.INIT,
-    action: 'join',
   },
-  READY: {
+  ready: {
     status: GAME_STATUS.INIT,
-    action: 'ready',
   },
-  START: {
+  start: {
     status: GAME_STATUS.INIT,
-    action: 'start',
   },
-  ACT: {
+  act: {
     status: GAME_STATUS.PLAYING,
-    action: 'act',
   },
-  RESTART: {
+  restart: {
     status: GAME_STATUS.OVER,
-    action: 'restart',
   },
-  EXIT: {
+  exit: {
     status: GAME_STATUS.OVER,
-    action: 'exit',
   }
 }
 
 export default class Game {
-  constructor(creater, socket) {
-    this.socket = socket;
+  constructor(id, creater) {
+    this.id = id;
     this.status = GAME_STATUS.INIT;
     this.players = [creater];
     this.deck = new Deck();
   }
 
-  processInput(cmd, player, data) {
-    const cmdObj = commands[cmd];
-    if (cmdObj && cmdObj.status === this.status) {
-      this[cmdObj.action](player, data);
+  getStats = () => {
+    return {
+      status: this.status,
+      players: this.players.map(player => player.data()),
+      cardNum: this.deck.cards.length,
     }
+  }
+
+  process(cmd, player, data) {
+    if (CMD_STATUS[cmd].status === this.status) {
+      return this[cmd](player, data);
+    }
+    return null;
   }
 
   join(player) {
     this.players.push(player);
+    return this.players.map(player => player.data());
   }
 
-  ready(player) {
-    this.player.isReady = true;
-    const twoToFour = this.players.length > 1 && this.players.length < 5;
-    const allReady = this.players.every(player.isReady);
-    if (twoToFour && allReady) {
-      // notice creater that all players are ready.
-    }
+  ready(selectedPlayer) {
+    this.players.forEach(player => {
+      if (player.id === selectedPlayer.id) {
+        player.isReady = true;
+      }
+    })
+    return this.players.map(player => player.data());
   }
 
   start() {
@@ -65,7 +68,10 @@ export default class Game {
     this.deck.setup();
 
     // deal cards
-
+    return this.players.map(player => {
+      player.card = this.deck.deal();
+      return player.data();
+    });
   }
 
   /**

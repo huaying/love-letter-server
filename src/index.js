@@ -20,7 +20,7 @@ const io = SocketIO(server);
 server.game = {};
 
 const onConnection = (socket) => {
-  new Controller(server, socket).listen();
+  new Controller(server, socket, io).listen();
 };
 
 io.on('connection', onConnection);

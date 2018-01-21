@@ -3,9 +3,10 @@ import Player from './Player';
 import { random4Digit } from './utils/random';
 
 export default class Controller {
-  constructor(server, socket) {
+  constructor(server, socket, io) {
     this.server = server;
     this.socket = socket;
+    this.io = io;
     // Needed to be modified
     socket.player = new Player(socket.id);
   }
@@ -14,6 +15,10 @@ export default class Controller {
     const socket = this.socket;
     socket.on('create', this.createGame);
     socket.on('join', this.joinGame);
+    socket.on('ready', this.process('ready'));
+    socket.on('start', this.process('start'));
+    socket.on('act', this.act);
+    socket.on('restart', this.restart);
     // socket.on('gaming', (data) => {
     //   if (socket.game) {
     //     const { cmd } = data;
@@ -22,31 +27,54 @@ export default class Controller {
     // });
   }
 
-  createGame = () => {
+  act = () => {}
+  restart = () => {}
+  getGame = () => {
+    return game = this.server.game[id];
+  }
+
+  createGame = (playerName) => {
     const socket = this.socket;
     const server = this.server;
+    const player = socket.player;
     if (socket.game) return;
     const id = random4Digit();
     const game = server.game[id];
     if (!game) {
       socket.join(id);
-      socket.game = new Game(socket.player, socket);
+      player.name = playerName;
+      socket.game = new Game(id, player, socket);
       server.game[id] = socket.game;
-      socket.emit('gameCreated', { gameData: { gameId: id } });
+      socket.emit('gameStats', {
+        game: game.getStats()
+      });
     }
   }
 
   joinGame = (data) => {
     const socket = this.socket;
     const server = this.server;
-
+    const player = socket.player;
     if (socket.game) return;
     const { id } = data;
     const game = server.game[id];
     if (game) {
       socket.join(id);
-      game.processInput('JOIN_GAME', socket.player);
+      player.name = playerName;
       socket.game = game;
+      this.io.to(id).emit('gameStats', {
+        game: game.process('join', player)
+      });
     }
   }
+
+  process = (operation) => {
+    const socket = this.socket;
+    const player = socket.player;
+    const game = socket.game;
+    this.io.to(game.id).emit('gameStats', {
+      game: game.process(operation, player)
+    });
+  }
+
 }
