@@ -45,9 +45,7 @@ export default class Controller {
       player.name = playerName;
       socket.game = new Game(id, player, socket);
       server.game[id] = socket.game;
-      socket.emit('gameStats', {
-        game: game.getStats()
-      });
+      socket.emit('gameStats', socket.game.getStats());
     }
   }
 
@@ -56,25 +54,21 @@ export default class Controller {
     const server = this.server;
     const player = socket.player;
     if (socket.game) return;
-    const { id } = data;
+    const { id, name } = data;
     const game = server.game[id];
     if (game) {
       socket.join(id);
-      player.name = playerName;
+      player.name = name;
       socket.game = game;
-      this.io.to(id).emit('gameStats', {
-        game: game.process('join', player)
-      });
+      this.io.to(id).emit('gameStats', game.process('join', player));
     }
   }
 
-  process = (operation) => {
+  process = () => (operation) => {
     const socket = this.socket;
     const player = socket.player;
     const game = socket.game;
-    this.io.to(game.id).emit('gameStats', {
-      game: game.process(operation, player)
-    });
+    this.io.to(game.id).emit('gameStats', game.process(operation, player));
   }
 
 }

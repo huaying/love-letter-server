@@ -38,7 +38,7 @@ export default class Game {
     return {
       id: this.id,
       status: this.status,
-      players: this.players.map(player => player.data()),
+      players: this.players.map(player => player.getData()),
       cardNum: this.deck.cards.length,
     }
   }
