@@ -42,7 +42,7 @@ export default class Game {
       status: this.status,
       currentPlayerId: this.currentPlayer.id,
       currentCardId: this.currentCard.id,
-      players: this.players.map(player => player.data()),
+      players: this.players.map(player => player.getData()),
       cardNum: this.deck.cards.length,
     }
   }

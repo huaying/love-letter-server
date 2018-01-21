@@ -8,7 +8,7 @@ export default class Player {
     this.isReady = false;
   }
 
-  static data = () => {
+  getData = () => {
     return {
       id: this.id,
       name: this.name,
