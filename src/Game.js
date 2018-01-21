@@ -30,6 +30,8 @@ export default class Game {
   constructor(id, creater) {
     this.id = id;
     this.status = GAME_STATUS.INIT;
+    this.currentPlayer = null;
+    this.currentCard = null;
     this.players = [creater];
     this.deck = new Deck();
   }
@@ -38,6 +40,8 @@ export default class Game {
     return {
       id: this.id,
       status: this.status,
+      currentPlayerId: this.currentPlayer.id,
+      currentCardId: this.currentCard.id,
       players: this.players.map(player => player.data()),
       cardNum: this.deck.cards.length,
     }

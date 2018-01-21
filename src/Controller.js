@@ -56,11 +56,11 @@ export default class Controller {
     const server = this.server;
     const player = socket.player;
     if (socket.game) return;
-    const { id } = data;
+    const { id, name } = data;
     const game = server.game[id];
     if (game) {
       socket.join(id);
-      player.name = playerName;
+      player.name = name;
       socket.game = game;
       this.io.to(id).emit('gameStats', {
         game: game.process('join', player)
@@ -68,12 +68,12 @@ export default class Controller {
     }
   }
 
-  process = (operation) => {
+  process = (data) => (operation) => {
     const socket = this.socket;
     const player = socket.player;
     const game = socket.game;
     this.io.to(game.id).emit('gameStats', {
-      game: game.process(operation, player)
+      game: game.process(operation, player, data)
     });
   }
 
