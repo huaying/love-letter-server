@@ -16,7 +16,7 @@ const CARD = {
     peek: (game, player, data) => {
       // otherPlayer.card.id
     }
-  }
+  },
   Baron: {
     number: 3,
     ability: 'compare',
@@ -66,8 +66,8 @@ const CARD = {
 export default class Card {
   constructor(name) {
     const card = CARD[name];
+    this.id = name;
     this.number = card.number;
-    this.name = card.name;
     this.ability = card.ability;
   }
 }

@@ -17,7 +17,7 @@ export default class Controller {
     socket.on('join', this.joinGame);
     socket.on('ready', this.process('ready'));
     socket.on('start', this.process('start'));
-    socket.on('act', this.act);
+    socket.on('act', this.process('act'));
     socket.on('restart', this.restart);
     // socket.on('gaming', (data) => {
     //   if (socket.game) {
@@ -64,7 +64,7 @@ export default class Controller {
     }
   }
 
-  process = (data) => (operation) => {
+  process = (operation) => (data) => {
     const socket = this.socket;
     const player = socket.player;
     const game = socket.game;

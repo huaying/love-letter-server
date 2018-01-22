@@ -1,3 +1,5 @@
+import Card from './Card';
+
 const shuffle = (arr) => {
   const cloned = { ...arr };
   cloned.forEach((_, i) => {
