@@ -29,7 +29,7 @@ const CARD = {
   Handmaid: {
     number: 4,
     skill: 'protect',
-    protect: (game, player, data) => {
+    protect: (game, player) => {
       player.isProtected = true;
     },
   },
@@ -38,8 +38,8 @@ const CARD = {
     skill: 'redraw',
     redraw: (game, player, data) => {
       const { playerId } = data;
-      const otherPlayer = game._findPlayer(playerId);
-      otherPlayer.card = game.deck.deal();
+      const target = game._findPlayer(playerId);
+      target.card = game.deck.deal();
     },
   },
   King: {

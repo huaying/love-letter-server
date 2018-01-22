@@ -81,12 +81,14 @@ export default class Game {
    * data: { cardId }
    */
   act(player, data) {
-    const { cardId } = data;
+    const { changeHand } = data;
 
     // act
-    const card = CARD[cardId];
-    const miniRoundOver = card.act(this, player, data);
-
+    const chosenCard = (changeHand) ? this.currentCard : player.card;
+    if (changeHand) {
+      player.card = this.currentCard;
+    }
+    const miniRoundOver = chosenCard.act(this, player, data);
     if (miniRoundOver) {
       if (this._isGameOver()) {
         this.status = GAME_STATUS.OVER;
