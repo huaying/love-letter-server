@@ -4,7 +4,29 @@
   <body>
     <script src="/socket.io/socket.io.js"></script>
     <script>
-      var socket = io();
+      var socket1 = io();
+      var socket2 = io();
+
+      console.log('socket1 create')
+      socket1.emit('create', 'test');
+
+      setTimeout(() => {
+        console.log('socket2 join')
+        socket2.emit('join', { name:'test2', id: '1111' })
+      }, 1000);
+
+      setTimeout(() => {
+        console.log('socket1 start')
+        socket1.emit('start')
+      }, 2000);
+
+      socket1.on('gameStats', function (data) {
+        console.log('socket1', data);
+      });
+
+      socket2.on('gameStats', function (data) {
+        console.log('socket2', data);
+      });
     </script>
   </body>
 </html>
