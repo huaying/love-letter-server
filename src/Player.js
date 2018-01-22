@@ -16,16 +16,4 @@ export default class Player {
       isReady: this.isReady,
     }
   }
-
-  setLost() {
-    this.lost = true;
-  }
-
-  setProtected() {
-    this.isProtected = true;
-  }
-
-  unsetProtected() {
-    this.isProtected = false;
-  }
 }

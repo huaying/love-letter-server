@@ -30,7 +30,7 @@ export default class Game {
   constructor(id, creater) {
     this.id = id;
     this.status = GAME_STATUS.INIT;
-    this.currentPlayer = 0;
+    this.currentPlayer = null;
     this.currentCard = null;
     this.players = [creater];
     this.deck = new Deck();
@@ -74,9 +74,7 @@ export default class Game {
     this.players.forEach(player => {
       player.card = this.deck.deal();
     });
-    this.currentCard = this.deck.deal();
-    this.currentPlayer = this.players[Math.floor(Math.random() * this.players.length)];
-    return this.getStats();
+    this._nextTurnPrepare();
   }
 
   /**
@@ -87,19 +85,19 @@ export default class Game {
 
     // act
     const card = CARD[cardId];
-    const sessionIsEnd = card.act(this, player, data);
+    const miniRoundOver = card.act(this, player, data);
 
-    if (sessionIsEnd) {
-      if (this.isGameOver()) {
+    if (miniRoundOver) {
+      if (this._isGameOver()) {
         this.status = GAME_STATUS.OVER;
       } else {
         this.start();
       }
-      return;
+      return this.getStats();
     }
 
     // deal card to next user
-    // this.deck.deal();
+    this._nextTurnPrepare();
   }
 
   restart(player) {
@@ -110,7 +108,31 @@ export default class Game {
 
   }
 
-  isGameOver() {
+  _nextTurnPrepare() {
+    this.currentCard = this.deck.deal();
+    this._nextPlayer();
+  }
 
+  _findPlayer(playerId) {
+    return this.players.find(player => player.id === playerId);
+  }
+
+  _nextPlayer() {
+    let nextIdx = null;
+    if (this.currentPlayer === null) {
+      nextIdx = Math.floor(Math.random() * this.players.length);
+    } else {
+      const idx = this.players.findIndex(
+        player => player.id === this.currentPlayer.id);
+      nextIdx = (idx + 1 + this.players.length) % this.players.length;
+    }
+
+    if (nextIdx !== null) {
+      this.currentPlayer = this.players[nextIdx];
+    }
+  }
+
+  _isGameOver() {
+    return true;
   }
 }

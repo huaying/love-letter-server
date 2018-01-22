@@ -37,6 +37,7 @@ export default class Deck {
     if (this.cards.length > 0) {
       return this.cards.pop()
     }
+    return null;
   }
 
   discard() {
