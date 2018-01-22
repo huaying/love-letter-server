@@ -1,7 +1,7 @@
 import Card from './Card';
 
 const shuffle = (arr) => {
-  const cloned = { ...arr };
+  const cloned = [ ...arr ];
   cloned.forEach((_, i) => {
     const idx = Math.floor(Math.random() * (i + 1));
     [cloned[i], cloned[idx]] = [cloned[idx], cloned[i]];
@@ -16,14 +16,14 @@ export default class Deck {
 
   setup() {
     this.cards = [
-      ...Array(5).fill(Card('Guard')),
-      ...Array(2).fill(Card('Priest')),
-      ...Array(2).fill(Card('Baron')),
-      ...Array(2).fill(Card('Handmaid')),
-      ...Array(2).fill(Card('Prince')),
-      ...Array(1).fill(Card('King')),
-      ...Array(1).fill(Card('Countess')),
-      ...Array(1).fill(Card('Princess')),
+      ...Array(5).fill(new Card('Guard')),
+      ...Array(2).fill(new Card('Priest')),
+      ...Array(2).fill(new Card('Baron')),
+      ...Array(2).fill(new Card('Handmaid')),
+      ...Array(2).fill(new Card('Prince')),
+      ...Array(1).fill(new Card('King')),
+      ...Array(1).fill(new Card('Countess')),
+      ...Array(1).fill(new Card('Princess')),
     ];
     this.shuffle();
     this.discard();

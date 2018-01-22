@@ -39,7 +39,7 @@ export default class Game {
   getStats = () => ({
       id: this.id,
       status: this.status,
-      currentPlayerId: this.currentPlayer ? this.currentPlayer.id : null,
+      currentPlayer: this.currentPlayer ? this.currentPlayer.getData() : null,
       currentCardId: this.currentCard ? this.currentCard.id : null,
       players: this.players.map(player => player.getData()),
       cardNum: this.deck.cards.length,
@@ -75,6 +75,7 @@ export default class Game {
       player.card = this.deck.deal();
     });
     this.currentCard = this.deck.deal();
+    this.currentPlayer = this.players[Math.floor(Math.random() * this.players.length)];
     return this.getStats();
   }
 
