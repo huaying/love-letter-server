@@ -69,12 +69,12 @@ export default class Game {
   start() {
     this.status = GAME_STATUS.PLAYING;
     this.deck.setup();
-
     // deal cards
     this.players.forEach(player => {
       player.card = this.deck.deal();
     });
     this._nextTurnPrepare();
+    return this.getStats();
   }
 
   /**
@@ -100,6 +100,7 @@ export default class Game {
 
     // deal card to next user
     this._nextTurnPrepare();
+    return this.getStats();
   }
 
   restart(player) {
@@ -115,8 +116,8 @@ export default class Game {
     this._nextPlayer();
   }
 
-  _findPlayer(playerId) {
-    return this.players.find(player => player.id === playerId);
+  _findPlayer(playerName) {
+    return this.players.find(player => player.name === playerName);
   }
 
   _nextPlayer() {
@@ -128,7 +129,6 @@ export default class Game {
         player => player.id === this.currentPlayer.id);
       nextIdx = (idx + 1 + this.players.length) % this.players.length;
     }
-
     if (nextIdx !== null) {
       this.currentPlayer = this.players[nextIdx];
     }

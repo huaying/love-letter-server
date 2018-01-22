@@ -38,8 +38,8 @@ export default class Controller {
     const server = this.server;
     const player = socket.player;
     if (socket.game) return;
-    // const id = random4Digit();
-    const id = '1111';
+    const id = random4Digit();
+    // const id = '1111';
     const game = server.game[id];
     if (!game) {
       socket.join(id);
@@ -66,6 +66,7 @@ export default class Controller {
   }
 
   process = (operation) => (data) => {
+    console.log(data);
     const socket = this.socket;
     const player = socket.player;
     const game = socket.game;

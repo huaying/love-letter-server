@@ -3,8 +3,8 @@ const CARD = {
     number: 1,
     skill: 'guess',
     guess: (game, player, data) => {
-      const { playerId, guessCardId } = data;
-      const otherPlayer = game._findPlayer(playerId);
+      const { targetName, guessCardId } = data;
+      const otherPlayer = game._findPlayer(targetName);
       if (otherPlayer.card.id === guessCardId) {
         otherPlayer.lost = true;
       }
@@ -19,8 +19,8 @@ const CARD = {
     number: 3,
     skill: 'compare',
     compare: (game, player, data) => {
-      const { playerId } = data;
-      const otherPlayer = game._findPlayer(playerId);
+      const { targetName } = data;
+      const otherPlayer = game._findPlayer(targetName);
       if (otherPlayer.card.number < player.card.number) {
         otherPlayer.lost = true;
       }
@@ -37,8 +37,8 @@ const CARD = {
     number: 5,
     skill: 'redraw',
     redraw: (game, player, data) => {
-      const { playerId } = data;
-      const target = game._findPlayer(playerId);
+      const { targetName } = data;
+      const target = game._findPlayer(targetName);
       target.card = game.deck.deal();
     },
   },
@@ -46,8 +46,8 @@ const CARD = {
     number: 6,
     skill: 'swap',
     swap: (game, player, data) => {
-      const { playerId } = data;
-      const otherPlayer = game._findPlayer(playerId);
+      const { targetName } = data;
+      const otherPlayer = game._findPlayer(targetName);
       [otherPlayer.card, player.card] = [player.card, otherPlayer.card];
     },
   },
