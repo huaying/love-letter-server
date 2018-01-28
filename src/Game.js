@@ -140,6 +140,7 @@ export default class Game {
     }
     if (nextIdx !== null) {
       this.currentPlayer = this.players[nextIdx];
+      this.currentPlayer.unprotect();
     }
   }
 

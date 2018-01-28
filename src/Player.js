@@ -15,6 +15,7 @@ export default class Player {
       cardId: this.card ? this.card.id : null, // hidden others' card later
       cardName: this.card ? this.card.name : null,
       isReady: this.isReady,
+      isProtected: this.isProtected,
     }
   }
 
