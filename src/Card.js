@@ -13,6 +13,7 @@ const CARD = {
     skill: 'guess',
     guess: (game, player, data) => {
       const { targetName, guessCardId } = data;
+      if (!targetName) return;
       const otherPlayer = game._findPlayer(targetName);
       if (otherPlayer.card.id === guessCardId) {
         otherPlayer.lost = true;
@@ -29,6 +30,7 @@ const CARD = {
     skill: 'compare',
     compare: (game, player, data) => {
       const { targetName } = data;
+      if (!targetName) return;
       const otherPlayer = game._findPlayer(targetName);
       if (otherPlayer.card.rank < player.card.rank) {
         otherPlayer.setLost();
@@ -58,6 +60,7 @@ const CARD = {
     skill: 'swap',
     swap: (game, player, data) => {
       const { targetName } = data;
+      if (!targetName) return;
       const otherPlayer = game._findPlayer(targetName);
       [otherPlayer.card, player.card] = [player.card, otherPlayer.card];
     },

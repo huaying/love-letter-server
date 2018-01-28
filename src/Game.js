@@ -34,6 +34,7 @@ export default class Game {
     this.currentCard = null;
     this.players = [creater];
     this.deck = new Deck();
+    this.history = [];
   }
 
   getStats = () => ({
@@ -88,6 +89,11 @@ export default class Game {
     if (changeHand) {
       player.card = this.currentCard;
     }
+    this.history.push({
+      player,
+      chosenCard,
+      data,
+    });
     console.log('Player', player, 'is playing', chosenCard);
     console.log(data);
     chosenCard.act(this, player, data);
