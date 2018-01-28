@@ -44,6 +44,7 @@ export default class Game {
       currentCardId: this.currentCard ? this.currentCard.id : null,
       players: this.players.map(player => player.getData()),
       cardNum: this.deck.cards.length,
+      history: this.history,
   })
 
   process(cmd, player, data) {
