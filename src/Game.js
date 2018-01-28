@@ -88,6 +88,8 @@ export default class Game {
     if (changeHand) {
       player.card = this.currentCard;
     }
+    console.log('Player', player, 'is playing', chosenCard);
+    console.log(data);
     chosenCard.act(this, player, data);
     if (this._miniRoundOver()) {
       if (this._isGameOver()) {
@@ -113,8 +115,6 @@ export default class Game {
   }
 
   _miniRoundOver = () => {
-    console.log(this.deck.isEmpty());
-    console.log(this.players.filter(player => player.lost === false).length === 1);
     if (this.deck.isEmpty()) return true;
     return this.players.filter(player => player.lost === false).length === 1;
   }
