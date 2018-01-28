@@ -84,13 +84,14 @@ export default class Game {
     const { changeHand } = data;
 
     // act
-    const chosenCard = (changeHand) ? this.currentCard : player.card;
+    const chosenCard = (changeHand) ? player.card : this.currentCard;
     if (changeHand) {
       player.card = this.currentCard;
     }
-    const miniRoundOver = chosenCard.act(this, player, data);
-    if (miniRoundOver) {
+    chosenCard.act(this, player, data);
+    if (this._miniRoundOver()) {
       if (this._isGameOver()) {
+        console.log('Game over');
         this.status = GAME_STATUS.OVER;
       } else {
         this.start();
@@ -110,6 +111,14 @@ export default class Game {
   exit(player) {
 
   }
+
+  _miniRoundOver = () => {
+    console.log(this.deck.isEmpty());
+    console.log(this.players.filter(player => player.lost === false).length === 1);
+    if (this.deck.isEmpty()) return true;
+    return this.players.filter(player => player.lost === false).length === 1;
+  }
+
 
   _nextTurnPrepare() {
     this.currentCard = this.deck.deal();
