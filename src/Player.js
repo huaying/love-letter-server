@@ -16,6 +16,7 @@ export default class Player {
       cardName: this.card ? this.card.name : null,
       isReady: this.isReady,
       isProtected: this.isProtected,
+      lost: this.lost,
     }
   }
 

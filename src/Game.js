@@ -143,7 +143,10 @@ export default class Game {
     } else {
       const idx = this.players.findIndex(
         player => player.id === this.currentPlayer.id);
-      nextIdx = (idx + 1 + this.players.length) % this.players.length;
+      nextIdx = (idx + 1) % this.players.length;
+      while (this.players[nextIdx].lost) {
+        nextIdx = (nextIdx + 1) % this.players.length;
+      }
     }
     if (nextIdx !== null) {
       this.currentPlayer = this.players[nextIdx];

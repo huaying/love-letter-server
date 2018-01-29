@@ -66,7 +66,6 @@ export default class Controller {
   }
 
   process = (operation) => (data) => {
-    console.log(data);
     const socket = this.socket;
     const player = socket.player;
     const game = socket.game;
