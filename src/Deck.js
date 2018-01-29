@@ -1,4 +1,14 @@
 import Card from './Card';
+import {
+  GUARD,
+  PRIEST,
+  BARON,
+  HANDMAID,
+  PRINCE,
+  KING,
+  COUNTESS,
+  PRINCESS,
+} from './Card';
 
 const shuffle = (arr) => {
   const cloned = [ ...arr ];
@@ -16,17 +26,21 @@ export default class Deck {
 
   setup() {
     this.cards = [
-      ...Array(5).fill(new Card('Guard')),
-      ...Array(2).fill(new Card('Priest')),
-      ...Array(2).fill(new Card('Baron')),
-      ...Array(2).fill(new Card('Handmaid')),
-      ...Array(2).fill(new Card('Prince')),
-      ...Array(1).fill(new Card('King')),
-      ...Array(1).fill(new Card('Countess')),
-      ...Array(1).fill(new Card('Princess')),
+      ...Array(5).fill(new Card(GUARD)),
+      ...Array(2).fill(new Card(PRIEST)),
+      ...Array(2).fill(new Card(BARON)),
+      ...Array(2).fill(new Card(HANDMAID)),
+      ...Array(2).fill(new Card(PRINCE)),
+      ...Array(1).fill(new Card(KING)),
+      ...Array(1).fill(new Card(COUNTESS)),
+      ...Array(1).fill(new Card(PRINCESS)),
     ];
     this.shuffle();
     this.discard();
+  }
+
+  isEmpty() {
+    return this.cards.length === 0;
   }
 
   shuffle() {

@@ -2,7 +2,7 @@
 set -e
 set -x
 
-$DIR="love-letter-server"
+DIR="love-letter-server"
 pushd $DIR >/dev/null
 
 git pull

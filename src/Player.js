@@ -12,8 +12,23 @@ export default class Player {
     return {
       id: this.id,
       name: this.name,
-      card: this.card ? this.card.id : null, // hidden others' card later
+      cardId: this.card ? this.card.id : null, // hidden others' card later
+      cardName: this.card ? this.card.name : null,
       isReady: this.isReady,
+      isProtected: this.isProtected,
+      lost: this.lost,
     }
+  }
+
+  setLost() {
+    this.lost = true;
+  }
+
+  protect() {
+    this.isProtected = true;
+  }
+
+  unprotect() {
+    this.isProtected = false;
   }
 }

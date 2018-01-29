@@ -1,75 +1,90 @@
+export const GUARD = 1;
+export const PRIEST = 2;
+export const BARON = 3;
+export const HANDMAID = 4;
+export const PRINCE = 5;
+export const KING = 6;
+export const COUNTESS = 7;
+export const PRINCESS = 8;
+
 const CARD = {
-  Guard: {
-    number: 1,
+  [GUARD]: {
+    name: 'Guard',
     skill: 'guess',
     guess: (game, player, data) => {
-      const { playerId, guessCardId } = data;
-      const otherPlayer = game._findPlayer(playerId);
+      const { targetName, guessCardId } = data;
+      if (!targetName) return;
+      const otherPlayer = game._findPlayer(targetName);
       if (otherPlayer.card.id === guessCardId) {
         otherPlayer.lost = true;
       }
     },
   },
-  Priest: {
-    number: 2,
+  [PRIEST]: {
+    name: 'Priest',
     skill: 'peek',
     peek: () => {}
   },
-  Baron: {
-    number: 3,
+  [BARON]: {
+    name: 'Baron',
     skill: 'compare',
     compare: (game, player, data) => {
-      const { playerId } = data;
-      const otherPlayer = game._findPlayer(playerId);
-      if (otherPlayer.card.number < player.card.number) {
-        otherPlayer.lost = true;
+      const { targetName } = data;
+      if (!targetName) return;
+      const otherPlayer = game._findPlayer(targetName);
+      if (otherPlayer.card.rank < player.card.rank) {
+        otherPlayer.setLost();
+      } else if (otherPlayer.card.rank > player.card.rank) {
+        player.setLost();
       }
     }
   },
-  Handmaid: {
-    number: 4,
+  [HANDMAID]: {
+    name: 'Handmaid',
     skill: 'protect',
     protect: (game, player) => {
-      player.isProtected = true;
+      player.protect();
     },
   },
-  Prince: {
-    number: 5,
+  [PRINCE]: {
+    name: 'Prince',
     skill: 'redraw',
     redraw: (game, player, data) => {
-      const { playerId } = data;
-      const target = game._findPlayer(playerId);
+      const { targetName } = data;
+      const target = game._findPlayer(targetName);
       target.card = game.deck.deal();
     },
   },
-  King: {
-    number: 6,
+  [KING]: {
+    name: 'King',
     skill: 'swap',
     swap: (game, player, data) => {
-      const { playerId } = data;
-      const otherPlayer = game._findPlayer(playerId);
+      const { targetName } = data;
+      if (!targetName) return;
+      const otherPlayer = game._findPlayer(targetName);
       [otherPlayer.card, player.card] = [player.card, otherPlayer.card];
     },
   },
-  Countess: {
-    number: 7,
+  [COUNTESS]: {
+    name: 'Countess',
     skill: 'sacrifice',
     sacrifice: () => {}
   },
-  Princess: {
-    number: 8,
+  [PRINCESS]: {
+    name: 'Princess',
     skill: 'hold',
     hold: (_, player) => {
-      player.lost = true;
+      player.setLost();
     }
   }
 }
 
 export default class Card {
-  constructor(name) {
-    const card = CARD[name];
-    this.id = name;
-    this.number = card.number;
+  constructor(id) {
+    const card = CARD[id];
+    this.id = id;
+    this.rank = id;
+    this.name = card.name;
     this.act = card[card.skill];
   }
 }

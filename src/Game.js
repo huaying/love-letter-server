@@ -34,6 +34,7 @@ export default class Game {
     this.currentCard = null;
     this.players = [creater];
     this.deck = new Deck();
+    this.history = [];
   }
 
   getStats = () => ({
@@ -43,6 +44,7 @@ export default class Game {
       currentCardId: this.currentCard ? this.currentCard.id : null,
       players: this.players.map(player => player.getData()),
       cardNum: this.deck.cards.length,
+      history: this.history,
   })
 
   process(cmd, player, data) {
@@ -69,12 +71,12 @@ export default class Game {
   start() {
     this.status = GAME_STATUS.PLAYING;
     this.deck.setup();
-
     // deal cards
     this.players.forEach(player => {
       player.card = this.deck.deal();
     });
     this._nextTurnPrepare();
+    return this.getStats();
   }
 
   /**
@@ -84,13 +86,21 @@ export default class Game {
     const { changeHand } = data;
 
     // act
-    const chosenCard = (changeHand) ? this.currentCard : player.card;
+    const chosenCard = (changeHand) ? player.card : this.currentCard;
     if (changeHand) {
       player.card = this.currentCard;
     }
-    const miniRoundOver = chosenCard.act(this, player, data);
-    if (miniRoundOver) {
+    this.history.push({
+      player,
+      chosenCard,
+      data,
+    });
+    console.log('Player', player, 'is playing', chosenCard);
+    console.log(data);
+    chosenCard.act(this, player, data);
+    if (this._miniRoundOver()) {
       if (this._isGameOver()) {
+        console.log('Game over');
         this.status = GAME_STATUS.OVER;
       } else {
         this.start();
@@ -100,6 +110,7 @@ export default class Game {
 
     // deal card to next user
     this._nextTurnPrepare();
+    return this.getStats();
   }
 
   restart(player) {
@@ -110,13 +121,19 @@ export default class Game {
 
   }
 
+  _miniRoundOver = () => {
+    if (this.deck.isEmpty()) return true;
+    return this.players.filter(player => player.lost === false).length === 1;
+  }
+
+
   _nextTurnPrepare() {
     this.currentCard = this.deck.deal();
     this._nextPlayer();
   }
 
-  _findPlayer(playerId) {
-    return this.players.find(player => player.id === playerId);
+  _findPlayer(playerName) {
+    return this.players.find(player => player.name === playerName);
   }
 
   _nextPlayer() {
@@ -126,11 +143,14 @@ export default class Game {
     } else {
       const idx = this.players.findIndex(
         player => player.id === this.currentPlayer.id);
-      nextIdx = (idx + 1 + this.players.length) % this.players.length;
+      nextIdx = (idx + 1) % this.players.length;
+      while (this.players[nextIdx].lost) {
+        nextIdx = (nextIdx + 1) % this.players.length;
+      }
     }
-
     if (nextIdx !== null) {
       this.currentPlayer = this.players[nextIdx];
+      this.currentPlayer.unprotect();
     }
   }
 
