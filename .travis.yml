@@ -1,6 +1,8 @@
 branches:
   only:
   - master
+install:
+  apt-get install sshpass
 script:
   SSHPASS=${DEPLOY_PASS} sshpass -e ssh ${DEPLOY_USER}@${DEPLOY_HOST} 'bash -c' < deploy.sh
 env:
