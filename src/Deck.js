@@ -49,7 +49,7 @@ export default class Deck {
 
   deal() {
     if (this.cards.length > 0) {
-      return this.cards.pop()
+      return this.cards.pop();
     }
     return null;
   }

@@ -29,7 +29,14 @@ export default class Controller {
   }
 
   act = () => {}
-  restart = () => {}
+  restart = () => {
+    const socket = this.socket;
+    if (!socket.game) return;
+    socket.game.restart();
+    console.log(socket.game);
+    console.log('emitting restart');
+    this.io.to(socket.game.id).emit('gameStats', socket.game.getStats());
+  }
   getGame = () => {
     return game = this.server.game[id];
   }

@@ -31,4 +31,10 @@ export default class Player {
   unprotect() {
     this.isProtected = false;
   }
+
+  reset() {
+    this.card = null;
+    this.lost = false;
+    this.isProtected = false;
+  }
 }

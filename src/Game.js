@@ -114,7 +114,12 @@ export default class Game {
   }
 
   restart(player) {
-
+    this.currentPlayer = null;
+    this.currentCard = null;
+    this.deck = new Deck();
+    this.history = [];
+    this.players.forEach(player => player.reset());
+    this.start();
   }
 
   exit(player) {
