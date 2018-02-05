@@ -24,6 +24,10 @@ export default class Player {
     this.lost = true;
   }
 
+  setCard(newCard) {
+    this.card = newCard;
+  }
+
   protect() {
     this.isProtected = true;
   }

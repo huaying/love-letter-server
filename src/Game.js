@@ -90,14 +90,16 @@ export default class Game {
     if (changeHand) {
       player.card = this.currentCard;
     }
+    console.log('Player', player, 'is playing', chosenCard);
+    console.log(data);
+    const result = chosenCard.act(this, player, data);
+    console.log(result);
     this.history.push({
       player,
       chosenCard,
       data,
+      result,
     });
-    console.log('Player', player, 'is playing', chosenCard);
-    console.log(data);
-    chosenCard.act(this, player, data);
     if (this._miniRoundOver()) {
       if (this._isGameOver()) {
         console.log('Game over');
