@@ -19,6 +19,7 @@ export default class Controller {
     socket.on('start', this.process('start'));
     socket.on('act', this.process('act'));
     socket.on('restart', this.restart);
+    socket.on('disconnecting', this.checkForCleanup);
     // socket.on('gaming', (data) => {
     //   if (socket.game) {
     //     const { cmd } = data;
@@ -38,16 +39,18 @@ export default class Controller {
     const server = this.server;
     const player = socket.player;
     if (socket.game) return;
-    const id = random4Digit();
+    let id = random4Digit();
     // const id = '1111';
-    const game = server.game[id];
-    if (!game) {
-      socket.join(id);
-      player.name = playerName;
-      socket.game = new Game(id, player, socket);
-      server.game[id] = socket.game;
-      socket.emit('gameStats', socket.game.getStats());
+    let game = server.game[id];
+    while (game) {
+      id = random4Digit();
+      game = server.game[id];
     }
+    socket.join(id);
+    player.name = playerName;
+    socket.game = new Game(id, player, socket);
+    server.game[id] = socket.game;
+    socket.emit('gameStats', socket.game.getStats());
   }
 
   joinGame = (data) => {
@@ -73,5 +76,18 @@ export default class Controller {
       'gameStats',
       game.process(operation, player, data),
     );
+  }
+
+  checkForCleanup = () => {
+    const socket = this.socket;
+    const io = this.io;
+    const server = this.server;
+    Object.keys(socket.rooms).forEach((roomId) => {
+      if (roomId === socket.id) return;
+      const room = io.sockets.adapter.rooms[roomId];
+      if (room.sockets[socket.id] && room.length === 1) { // if the last client disconnects from the room
+        delete server.game[roomId];
+      }
+    });
   }
 }
