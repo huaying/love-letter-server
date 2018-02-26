@@ -93,8 +93,10 @@ export default class Game {
     console.log('Player', player, 'is playing', chosenCard);
     console.log(data);
     const result = chosenCard.act(this, player, data);
+    const id = this.history.length;
     console.log(result);
     this.history.push({
+      id,
       player,
       chosenCard,
       data,
