@@ -2,6 +2,8 @@ import Game from './Game';
 import Player from './Player';
 import { random4Digit } from './utils/random';
 
+const ROOM_LIMIT = 4;
+
 export default class Controller {
   constructor(server, socket, io) {
     this.server = server;
@@ -68,10 +70,16 @@ export default class Controller {
     const { id, name } = data;
     const game = server.game[id];
     if (game) {
+      if (game.players.length >= ROOM_LIMIT) {
+        socket.emit('joinError', { error: 'Room full.' });
+        return;
+      }
       socket.join(id);
       player.name = name;
       socket.game = game;
       this.io.to(id).emit('gameStats', game.process('join', player));
+    } else {
+      socket.emit('joinError', { error: 'Invalid code.' });
     }
   }
 
